@@ -4,13 +4,10 @@ var router = express.Router();
 const db = require('../db/db'); // 导入db模块
 
 /* GET users listing. */
-router.get('/', (req, res) => {
-  res.send('Users page');
+router.post('/', (req, res) => {
+  console.log(req,'登录参数');
+  res.send('你现在是登陆页');
 });
 
-router.get('/users/:id', (req, res) => {
-  const { id } = req.params;
-  res.send(`User ${id}`);
-});
 
 module.exports = router;

@@ -2,6 +2,7 @@
 const createError = require('http-errors'); // 用于创建HTTP错误的模块
 const express = require('express'); // Express框架
 const path = require('path'); // 处理文件路径的模块
+const fs = require('fs');
 const cookieParser = require('cookie-parser'); // 解析cookie的中间件
 const logger = require('morgan'); // 记录HTTP请求日志的中间件
 const db = require('./db/db'); // 导入db模块
@@ -9,6 +10,8 @@ const db = require('./db/db'); // 导入db模块
 // 导入路由模块
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
+const loginRouter = require('./routes/login');
+
 
 const app = express(); // 创建Express应用程序
 
@@ -23,9 +26,11 @@ app.use(express.urlencoded({ extended: false })); // 解析请求体中的URL编
 app.use(cookieParser()); // 解析cookie
 app.use(express.static(path.join(__dirname, 'public'))); // 指定静态文件目录
 
-// 使用路由
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+// 使用路由 读取 
+  app.use('/', indexRouter);
+  app.use('/users', usersRouter);
+  app.use('/login', loginRouter);
+
 
 // 捕获404错误并转发到错误处理中间件
 app.use(function(req, res, next) {
