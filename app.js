@@ -6,11 +6,13 @@ const fs = require('fs');
 const cookieParser = require('cookie-parser'); // 解析cookie的中间件
 const logger = require('morgan'); // 记录HTTP请求日志的中间件
 const db = require('./db/db'); // 导入db模块
+const multer = require('multer');
 
 // 导入路由模块
 const indexRouter = require('./routes/index');
 const usersRouter = require('./routes/users');
 const loginRouter = require('./routes/login');
+const uploadRouter = require('./routes/upload');
 
 
 const app = express(); // 创建Express应用程序
@@ -20,16 +22,18 @@ app.set('views', path.join(__dirname, 'views')); // 指定视图文件的存放�
 app.set('view engine', 'jade'); // 使用jade作为模板引擎
 
 // 使用中间件
+app.use(express.static(path.join(__dirname, 'public'))); // 指定静态文件目录
+app.use(express.static(path.join(__dirname, 'files'))); // 指定静态文件目录
 app.use(logger('dev')); // 记录HTTP请求日志
 app.use(express.json()); // 解析请求体中的JSON数据
 app.use(express.urlencoded({ extended: false })); // 解析请求体中的URL编码数据
 app.use(cookieParser()); // 解析cookie
-app.use(express.static(path.join(__dirname, 'public'))); // 指定静态文件目录
 
 // 使用路由 读取 
   app.use('/', indexRouter);
   app.use('/users', usersRouter);
   app.use('/login', loginRouter);
+  app.use('/upload', uploadRouter);
 
 
 // 捕获404错误并转发到错误处理中间件
