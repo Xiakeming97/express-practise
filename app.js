@@ -1,3 +1,14 @@
+/*
+ * @Author: XiaKeMing xiakeming97@gmail.com
+ * @Date: 2023-10-11 13:57:28
+ * @LastEditors: XiaKeMing xiakeming97@gmail.com
+ * @LastEditTime: 2023-12-08 16:43:52
+ * @FilePath: /express-practise/app.js
+ * @Description: 主入口
+ * 
+ * Copyright (c) 2023 by XIAKEMING, All Rights Reserved. 
+ */
+
 // 导入所需模块
 const createError = require('http-errors'); // 用于创建HTTP错误的模块
 const express = require('express'); // Express框架
@@ -7,6 +18,7 @@ const cookieParser = require('cookie-parser'); // 解析cookie的中间件
 const logger = require('morgan'); // 记录HTTP请求日志的中间件
 const db = require('./db/db'); // 导入db模块
 const multer = require('multer');
+const responseHandler =  require('./middlewares/formatResponse.js'); // 导入请求结果统一返回中间件
 
 // 导入路由模块
 const indexRouter = require('./routes/index');
@@ -28,6 +40,13 @@ app.use(logger('dev')); // 记录HTTP请求日志
 app.use(express.json()); // 解析请求体中的JSON数据
 app.use(express.urlencoded({ extended: false })); // 解析请求体中的URL编码数据
 app.use(cookieParser()); // 解析cookie
+
+app.use((req, res, next) => {
+  responseHandler.handleSuccess(req, res, next);
+}); // 统一返回请求结果
+app.use((req, res, next) => {
+  responseHandler.handleError(req, res, next);
+}); // 统一返回请求结果
 
 // 使用路由 读取 
   app.use('/', indexRouter);
